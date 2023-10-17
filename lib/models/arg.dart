@@ -8,12 +8,11 @@ class Arg {
   final dynamic defaultValue;
   final String explaination;
 
-  Arg({
-    required this.name,
-    required this.icon,
-    required this.hintText,
-    required this.controller,
-    required this.defaultValue,
-    required this.explaination
-  });
+  Arg(
+      {required this.name,
+      required this.icon,
+      required this.hintText,
+      required this.controller,
+      required this.defaultValue,
+      required this.explaination});
 }

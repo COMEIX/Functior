@@ -20,28 +20,16 @@ class ToBlocks extends StatefulWidget {
 
 class _ToBlocksState extends State<ToBlocks> {
   void startGenerate(BuildContext context, List<Arg> argList) {
-    final samplingRate =
-        double.tryParse(argList[0].controller.text) ?? argList[0].defaultValue;
-    final generationSurface = argList[1].controller.text.isEmpty
-        ? argList[1].defaultValue
-        : argList[1].controller.text;
-    final allowSand = argList[2].controller.text.isEmpty
-        ? argList[2].defaultValue
-        : argList[2].controller.text;
-    final allowGlass = argList[3].controller.text.isEmpty
-        ? argList[3].defaultValue
-        : argList[3].controller.text;
+    final samplingRate = double.tryParse(argList[0].controller.text) ?? argList[0].defaultValue;
+    final generationSurface =
+        argList[1].controller.text.isEmpty ? argList[1].defaultValue : argList[1].controller.text;
+    final allowSand =
+        argList[2].controller.text.isEmpty ? argList[2].defaultValue : argList[2].controller.text;
+    final allowGlass =
+        argList[3].controller.text.isEmpty ? argList[3].defaultValue : argList[3].controller.text;
 
     // !
-    if (
-      !validationCheck(
-        context,
-        samplingRate,
-        generationSurface,
-        allowSand,
-        allowGlass
-      )
-    ) return;
+    if (!validationCheck(context, samplingRate, generationSurface, allowSand, allowGlass)) return;
 
     // *
     showDialog(
@@ -68,8 +56,7 @@ class _ToBlocksState extends State<ToBlocks> {
                   );
                 } else {
                   return AlertDialog(
-                    title: const Row(
-                        children: [Text('Done'), Icon(Icons.done_all)]),
+                    title: const Row(children: [Text('Done'), Icon(Icons.done_all)]),
                     content: Text('Saved function to:\n${snapshot.data}'),
                   );
                 }
@@ -79,8 +66,8 @@ class _ToBlocksState extends State<ToBlocks> {
 
   Future<String> generate(BuildContext context, List argList) async {
     // *
-    final result = await FilePicker.platform.pickFiles(
-        type: FileType.custom, allowedExtensions: ['jpg', 'jpeg', 'png']);
+    final result = await FilePicker.platform
+        .pickFiles(type: FileType.custom, allowedExtensions: ['jpg', 'jpeg', 'png']);
 
     // !
     if (result == null) {
@@ -191,8 +178,7 @@ class _ToBlocksState extends State<ToBlocks> {
         // Maximum lines cutting
         linesCount++;
         if (linesCount >= 10000) {
-          final savePath = path.join(
-              appDataDir.absolute.path, 'output$fileIndex.mcfunction');
+          final savePath = path.join(appDataDir.absolute.path, 'output$fileIndex.mcfunction');
           outputFile = File(savePath);
           await outputFile.writeAsString(output.toString());
           // Updates
@@ -205,8 +191,7 @@ class _ToBlocksState extends State<ToBlocks> {
       relativeX++;
     }
     // Rest
-    final savePath =
-        path.join(appDataDir.absolute.path, 'output$fileIndex.mcfunction');
+    final savePath = path.join(appDataDir.absolute.path, 'output$fileIndex.mcfunction');
     outputFile = File(savePath);
     await outputFile.writeAsString(output.toString());
     // Done
@@ -247,8 +232,7 @@ class _ToBlocksState extends State<ToBlocks> {
                       padding: const EdgeInsets.all(25),
                       width: double.infinity,
                       decoration: BoxDecoration(
-                          color: Colors.blueGrey,
-                          borderRadius: BorderRadius.circular(12)),
+                          color: Colors.blueGrey, borderRadius: BorderRadius.circular(12)),
                       child: const Center(
                         child: Text(
                           'Generate',
@@ -263,8 +247,8 @@ class _ToBlocksState extends State<ToBlocks> {
   }
 }
 
-bool validationCheck(BuildContext context, double samplingRate,
-    String generationSurface, String allowSand, String allowGlass) {
+bool validationCheck(BuildContext context, double samplingRate, String generationSurface,
+    String allowSand, String allowGlass) {
   //
   if (samplingRate < 0 || samplingRate > 1) {
     alertInvalidArg(context, 'Sampling Rate');

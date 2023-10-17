@@ -17,9 +17,8 @@ class _AboutInfoState extends State<AboutInfo> {
         children: [
           // LOGO
           Container(
-            decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(5)),
+            decoration:
+                BoxDecoration(color: Colors.grey[200], borderRadius: BorderRadius.circular(5)),
             child: Row(
               children: [
                 const Image(
@@ -42,9 +41,8 @@ class _AboutInfoState extends State<AboutInfo> {
           // Version
           Container(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-            decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(5)),
+            decoration:
+                BoxDecoration(color: Colors.grey[200], borderRadius: BorderRadius.circular(5)),
             child: Row(
               children: [
                 const Text(
@@ -53,10 +51,7 @@ class _AboutInfoState extends State<AboutInfo> {
                 ),
                 Text(
                   'v2.0.0',
-                  style: TextStyle(
-                      fontFamily: 'Helvetica',
-                      fontSize: 18,
-                      color: Colors.grey[700]),
+                  style: TextStyle(fontFamily: 'Helvetica', fontSize: 18, color: Colors.grey[700]),
                 ),
               ],
             ),
@@ -65,9 +60,8 @@ class _AboutInfoState extends State<AboutInfo> {
           // Author
           Container(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-            decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(5)),
+            decoration:
+                BoxDecoration(color: Colors.grey[200], borderRadius: BorderRadius.circular(5)),
             child: Row(
               children: [
                 const Text(
@@ -76,10 +70,7 @@ class _AboutInfoState extends State<AboutInfo> {
                 ),
                 Text(
                   'COMEIX',
-                  style: TextStyle(
-                      fontFamily: 'Helvetica',
-                      fontSize: 18,
-                      color: Colors.grey[700]),
+                  style: TextStyle(fontFamily: 'Helvetica', fontSize: 18, color: Colors.grey[700]),
                 ),
               ],
             ),
@@ -88,9 +79,8 @@ class _AboutInfoState extends State<AboutInfo> {
           // Email
           Container(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-            decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(5)),
+            decoration:
+                BoxDecoration(color: Colors.grey[200], borderRadius: BorderRadius.circular(5)),
             child: Row(
               children: [
                 const Text(
@@ -99,10 +89,7 @@ class _AboutInfoState extends State<AboutInfo> {
                 ),
                 Text(
                   '2245638853@qq.com',
-                  style: TextStyle(
-                      fontFamily: 'Helvetica',
-                      fontSize: 18,
-                      color: Colors.grey[700]),
+                  style: TextStyle(fontFamily: 'Helvetica', fontSize: 18, color: Colors.grey[700]),
                 ),
               ],
             ),
@@ -111,9 +98,8 @@ class _AboutInfoState extends State<AboutInfo> {
           // For Minecraft version
           Container(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-            decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(5)),
+            decoration:
+                BoxDecoration(color: Colors.grey[200], borderRadius: BorderRadius.circular(5)),
             child: Row(
               children: [
                 const Text(
@@ -122,10 +108,7 @@ class _AboutInfoState extends State<AboutInfo> {
                 ),
                 Text(
                   'Minecraft Bedrock Edition v1.20+',
-                  style: TextStyle(
-                      fontFamily: 'Helvetica',
-                      fontSize: 18,
-                      color: Colors.grey[700]),
+                  style: TextStyle(fontFamily: 'Helvetica', fontSize: 18, color: Colors.grey[700]),
                 ),
               ],
             ),

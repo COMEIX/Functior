@@ -18,12 +18,10 @@ void main() async {
       prefs.setBool('first_time', false);
     }
   }
-  runApp(
-    ChangeNotifierProvider(
-      create: (context) => ArgsAsker(),
-      child: const MyApp(),
-    )
-  );
+  runApp(ChangeNotifierProvider(
+    create: (context) => ArgsAsker(),
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -35,16 +33,12 @@ class MyApp extends StatelessWidget {
       SystemUiMode.edgeToEdge,
     );
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
-    // 沉浸式状态栏（仅安卓）
+      // 沉浸式状态栏（仅安卓）
       statusBarColor: Colors.transparent,
-    // 沉浸式导航指示器
+      // 沉浸式导航指示器
       systemNavigationBarColor: Colors.transparent,
     ));
-    return const MaterialApp(
-      
-      debugShowCheckedModeBanner: false,
-      home: HomePage()
-    );
+    return const MaterialApp(debugShowCheckedModeBanner: false, home: HomePage());
   }
 }
 

@@ -1,4 +1,3 @@
-
 import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
@@ -11,7 +10,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 import '../models/arg.dart';
 
-
 class ToParticles extends StatefulWidget {
   const ToParticles({super.key});
 
@@ -20,87 +18,58 @@ class ToParticles extends StatefulWidget {
 }
 
 class _ToParticlesState extends State<ToParticles> {
-
   void startGenerate(BuildContext context, List<Arg> argList) {
-    final samplingRate = 
-      double.tryParse(argList[0].controller.text) ?? argList[0].defaultValue;
-    final particleHeight =
-      double.tryParse(argList[1].controller.text) ?? argList[1].defaultValue;
+    final samplingRate = double.tryParse(argList[0].controller.text) ?? argList[0].defaultValue;
+    final particleHeight = double.tryParse(argList[1].controller.text) ?? argList[1].defaultValue;
     final particleTypeId =
-      argList[2].controller.text.isEmpty ?
-      argList[2].defaultValue :
-      argList[2].controller.text;
-    final targetColor = 
-      argList[3].controller.text.isEmpty ?
-      argList[3].defaultValue :
-      argList[3].controller.text;
+        argList[2].controller.text.isEmpty ? argList[2].defaultValue : argList[2].controller.text;
+    final targetColor =
+        argList[3].controller.text.isEmpty ? argList[3].defaultValue : argList[3].controller.text;
     final generationSurface =
-      argList[4].controller.text.isEmpty ?
-      argList[4].defaultValue :
-      argList[4].controller.text;
+        argList[4].controller.text.isEmpty ? argList[4].defaultValue : argList[4].controller.text;
     // !
-    if (
-      !validationCheck(
-        context,
-        samplingRate,
-        particleHeight,
-        particleTypeId,
-        targetColor,
-        generationSurface
-      )
-    ) return;
+    if (!validationCheck(
+        context, samplingRate, particleHeight, particleTypeId, targetColor, generationSurface))
+      return;
 
     // *
     showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return FutureBuilder(
-          future: generate(context, [
-            samplingRate,
-            particleHeight,
-            particleTypeId,
-            hexToRgb(targetColor),
-            generationSurface
-          ]),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const AlertDialog(
-                title: Row(children: [
-                  Text('Loading'),
-                  Icon(Icons.bolt)
-                ]),
-                content: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CircularProgressIndicator()
-                  ]
-                )
-              );
-            } else if (snapshot.hasError) {
-              return AlertDialog(
-                title: const Text('Error'),
-                content: Text('${snapshot.error}'),
-              );
-            } else {
-              return AlertDialog(
-                title: const Row(children: [
-                  Text('Done'),
-                  Icon(Icons.done_all)
-                ]),
-                content: Text('Saved function to:\n${snapshot.data}'),
-              );
-            }
-          }
-        );
-      }
-    );
+        context: context,
+        builder: (BuildContext context) {
+          return FutureBuilder(
+              future: generate(context, [
+                samplingRate,
+                particleHeight,
+                particleTypeId,
+                hexToRgb(targetColor),
+                generationSurface
+              ]),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const AlertDialog(
+                      title: Row(children: [Text('Loading'), Icon(Icons.bolt)]),
+                      content: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [CircularProgressIndicator()]));
+                } else if (snapshot.hasError) {
+                  return AlertDialog(
+                    title: const Text('Error'),
+                    content: Text('${snapshot.error}'),
+                  );
+                } else {
+                  return AlertDialog(
+                    title: const Row(children: [Text('Done'), Icon(Icons.done_all)]),
+                    content: Text('Saved function to:\n${snapshot.data}'),
+                  );
+                }
+              });
+        });
   }
 
   Future<String> generate(BuildContext context, List argList) async {
     // *
-    final result = await FilePicker.platform.pickFiles(
-      type: FileType.custom, allowedExtensions: ['jpg', 'jpeg', 'png']
-    );
+    final result = await FilePicker.platform
+        .pickFiles(type: FileType.custom, allowedExtensions: ['jpg', 'jpeg', 'png']);
 
     // !
     if (result == null) {
@@ -150,9 +119,7 @@ class _ToParticlesState extends State<ToParticles> {
         final g = img.getGreen(pixel);
         final b = img.getBlue(pixel);
 
-        final distance = sqrt(
-          pow(targetR - r, 2) + pow(targetG - g, 2) + pow(targetB - b, 2)
-        );
+        final distance = sqrt(pow(targetR - r, 2) + pow(targetG - g, 2) + pow(targetB - b, 2));
 
         if (distance > 30) continue;
 
@@ -167,16 +134,13 @@ class _ToParticlesState extends State<ToParticles> {
         } else if (surface == 'yOz') {
           output.write('particle $particleTypeId ~ ~$transX ~$transY\n');
         } else {
-          throw Exception('Unknown error occured'); 
+          throw Exception('Unknown error occured');
         }
 
         // Maximum lines cutting
         linesCount++;
         if (linesCount >= 10000) {
-          final savePath = path.join(
-            appDataDir.absolute.path,
-            'output$fileIndex.mcfunction'
-          );
+          final savePath = path.join(appDataDir.absolute.path, 'output$fileIndex.mcfunction');
           outputFile = File(savePath);
           await outputFile.writeAsString(output.toString());
           // Updates
@@ -198,71 +162,58 @@ class _ToParticlesState extends State<ToParticles> {
   @override
   Widget build(BuildContext context) {
     return Consumer<ArgsAsker>(
-      builder: (context, value, child) => SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(25.0),
-          child: Column(children: [
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  'Functior',
-                  style: TextStyle(fontSize: 36),
-                ),
-              ],
-            ),
-            const SizedBox(height: 25),
-            Expanded(
-              child: ListView.builder(
-                itemCount: value.toParticlesArgs.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: TextArgTile(
-                      arg: value.toParticlesArgs[index],
-                    )
-                  );
-                }
-              ),
-            ),
-            const SizedBox(height: 25),
-            Column(
-              children: [
-                GestureDetector(
-                  onTap: () => startGenerate(context, value.toParticlesArgs),
-                  child: Container(
-                    padding: const EdgeInsets.all(25),
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: Colors.blueGrey,
-                      borderRadius: BorderRadius.circular(12)
-                    ),
-                    child: const Center(
-                      child: Text(
-                        'Generate',
-                        style: TextStyle(
-                          color: Colors.white
+        builder: (context, value, child) => SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(25.0),
+                child: Column(children: [
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Functior',
+                        style: TextStyle(fontSize: 36),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 25),
+                  Expanded(
+                    child: ListView.builder(
+                        itemCount: value.toParticlesArgs.length,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                              title: TextArgTile(
+                            arg: value.toParticlesArgs[index],
+                          ));
+                        }),
+                  ),
+                  const SizedBox(height: 25),
+                  Column(
+                    children: [
+                      GestureDetector(
+                        onTap: () => startGenerate(context, value.toParticlesArgs),
+                        child: Container(
+                          padding: const EdgeInsets.all(25),
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                              color: Colors.blueGrey, borderRadius: BorderRadius.circular(12)),
+                          child: const Center(
+                            child: Text(
+                              'Generate',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                ),
-              ],
-            )
-          ]),
-        ),
-      )
-    );
+                    ],
+                  )
+                ]),
+              ),
+            ));
   }
 }
 
-bool validationCheck(
-  BuildContext context,
-  double samplingRate,
-  double particleHeight,
-  String particleTypeId,
-  String targetColor,
-  String generationSurface
-) {
+bool validationCheck(BuildContext context, double samplingRate, double particleHeight,
+    String particleTypeId, String targetColor, String generationSurface) {
   //
   if (samplingRate < 0 || samplingRate > 1) {
     alertInvalidArg(context, 'Sampling Rate');
@@ -270,7 +221,7 @@ bool validationCheck(
   }
   //
   if (particleHeight < 0) {
-  alertInvalidArg(context, 'Particle Height');
+    alertInvalidArg(context, 'Particle Height');
     return false;
   }
   //
@@ -296,23 +247,20 @@ void alertInvalidArg(BuildContext context, String arg) {
   showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Argument error'),
-        content: Text(
-          "Invalid argument '$arg'" + '\n' +
-          'Click the button next to the argument name to see more infomation about this argument'
-        ),
-      )
-  );
+            title: const Text('Argument error'),
+            content: Text("Invalid argument '$arg'" +
+                '\n' +
+                'Click the button next to the argument name to see more infomation about this argument'),
+          ));
 }
 
 void alertRuntimeError(BuildContext context, String content) {
   showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Runtime error'),
-        content: Text(content),
-      )
-  );
+            title: const Text('Runtime error'),
+            content: Text(content),
+          ));
 }
 
 List<int> hexToRgb(String hexColor) {
