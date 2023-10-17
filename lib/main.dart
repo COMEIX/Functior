@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:permission_handler/permission_handler.dart';
 import './pages/home_page.dart';
+import 'package:flutter/services.dart';
 
 void main() async {
   if (Platform.isAndroid) {
@@ -17,7 +18,6 @@ void main() async {
       prefs.setBool('first_time', false);
     }
   }
-
   runApp(
     ChangeNotifierProvider(
       create: (context) => ArgsAsker(),
@@ -31,9 +31,19 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setEnabledSystemUIMode(
+      SystemUiMode.edgeToEdge,
+    );
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
+    // 沉浸式状态栏（仅安卓）
+      statusBarColor: Colors.transparent,
+    // 沉浸式导航指示器
+      systemNavigationBarColor: Colors.transparent,
+    ));
     return const MaterialApp(
+      
       debugShowCheckedModeBanner: false,
-      home: SafeArea(child: HomePage())
+      home: HomePage()
     );
   }
 }

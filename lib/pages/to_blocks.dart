@@ -220,9 +220,14 @@ class _ToBlocksState extends State<ToBlocks> {
               child: Padding(
                 padding: const EdgeInsets.all(25.0),
                 child: Column(children: [
-                  const Text(
-                    'Functior',
-                    style: TextStyle(fontSize: 36),
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Functior',
+                        style: TextStyle(fontSize: 36),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 25),
                   Expanded(
