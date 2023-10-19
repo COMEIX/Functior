@@ -29,41 +29,44 @@ class _ToParticlesState extends State<ToParticles> {
         argList[4].controller.text.isEmpty ? argList[4].defaultValue : argList[4].controller.text;
     // !
     if (!validationCheck(
-        context, samplingRate, particleHeight, particleTypeId, targetColor, generationSurface))
+        context, samplingRate, particleHeight, particleTypeId, targetColor, generationSurface)) {
       return;
+    }
 
     // *
     showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return FutureBuilder(
-              future: generate(context, [
-                samplingRate,
-                particleHeight,
-                particleTypeId,
-                hexToRgb(targetColor),
-                generationSurface
-              ]),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const AlertDialog(
-                      title: Row(children: [Text('Loading'), Icon(Icons.bolt)]),
-                      content: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [CircularProgressIndicator()]));
-                } else if (snapshot.hasError) {
-                  return AlertDialog(
-                    title: const Text('Error'),
-                    content: Text('${snapshot.error}'),
-                  );
-                } else {
-                  return AlertDialog(
-                    title: const Row(children: [Text('Done'), Icon(Icons.done_all)]),
-                    content: Text('Saved function to:\n${snapshot.data}'),
-                  );
-                }
-              });
-        });
+      context: context,
+      builder: (BuildContext context) {
+        return FutureBuilder(
+          future: generate(context, [
+            samplingRate,
+            particleHeight,
+            particleTypeId,
+            hexToRgb(targetColor),
+            generationSurface
+          ]),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const AlertDialog(
+                  title: Row(children: [Text('Loading'), Icon(Icons.bolt)]),
+                  content: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [CircularProgressIndicator()]));
+            } else if (snapshot.hasError) {
+              return AlertDialog(
+                title: const Text('Error'),
+                content: Text('${snapshot.error}'),
+              );
+            } else {
+              return AlertDialog(
+                title: const Row(children: [Text('Done'), Icon(Icons.done_all)]),
+                content: Text('Saved function to:\n${snapshot.data}'),
+              );
+            }
+          },
+        );
+      },
+    );
   }
 
   Future<String> generate(BuildContext context, List argList) async {
@@ -98,9 +101,9 @@ class _ToParticlesState extends State<ToParticles> {
     final targetG = rgbs[1];
     final targetB = rgbs[2];
 
-    late final appDataDir;
+    late final Directory appDataDir;
     if (Platform.isAndroid) {
-      appDataDir = await getExternalStorageDirectory();
+      appDataDir = (await getExternalStorageDirectory())!;
     } else {
       appDataDir = await getApplicationDocumentsDirectory();
     }
@@ -162,53 +165,60 @@ class _ToParticlesState extends State<ToParticles> {
   @override
   Widget build(BuildContext context) {
     return Consumer<ArgsAsker>(
-        builder: (context, value, child) => SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.all(25.0),
-                child: Column(children: [
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Functior',
-                        style: TextStyle(fontSize: 36),
+      builder: (context, value, child) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(25.0),
+          child: Column(
+            children: [
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    'Functior',
+                    style: TextStyle(fontSize: 36),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 25),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: value.toParticlesArgs.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: TextArgTile(
+                        arg: value.toParticlesArgs[index],
                       ),
-                    ],
-                  ),
-                  const SizedBox(height: 25),
-                  Expanded(
-                    child: ListView.builder(
-                        itemCount: value.toParticlesArgs.length,
-                        itemBuilder: (context, index) {
-                          return ListTile(
-                              title: TextArgTile(
-                            arg: value.toParticlesArgs[index],
-                          ));
-                        }),
-                  ),
-                  const SizedBox(height: 25),
-                  Column(
-                    children: [
-                      GestureDetector(
-                        onTap: () => startGenerate(context, value.toParticlesArgs),
-                        child: Container(
-                          padding: const EdgeInsets.all(25),
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                              color: Colors.blueGrey, borderRadius: BorderRadius.circular(12)),
-                          child: const Center(
-                            child: Text(
-                              'Generate',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: 25),
+              Column(
+                children: [
+                  GestureDetector(
+                    onTap: () => startGenerate(context, value.toParticlesArgs),
+                    child: Container(
+                      padding: const EdgeInsets.all(25),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: Colors.blueGrey,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Center(
+                        child: Text(
+                          'Generate',
+                          style: TextStyle(color: Colors.white),
                         ),
                       ),
-                    ],
-                  )
-                ]),
+                    ),
+                  ),
+                ],
               ),
-            ));
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 
@@ -245,22 +255,26 @@ bool validationCheck(BuildContext context, double samplingRate, double particleH
 
 void alertInvalidArg(BuildContext context, String arg) {
   showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-            title: const Text('Argument error'),
-            content: Text("Invalid argument '$arg'" +
-                '\n' +
-                'Click the button next to the argument name to see more infomation about this argument'),
-          ));
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text('Argument error'),
+      content: Text(
+        "Invalid argument '$arg'"
+        '\n'
+        'Click the button next to the argument name to see more infomation about this argument',
+      ),
+    ),
+  );
 }
 
 void alertRuntimeError(BuildContext context, String content) {
   showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-            title: const Text('Runtime error'),
-            content: Text(content),
-          ));
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text('Runtime error'),
+      content: Text(content),
+    ),
+  );
 }
 
 List<int> hexToRgb(String hexColor) {

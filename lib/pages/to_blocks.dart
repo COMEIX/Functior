@@ -93,9 +93,9 @@ class _ToBlocksState extends State<ToBlocks> {
     final bool allowGlass = argList[3];
 
     // Dir
-    late final appDataDir;
+    late final Directory appDataDir;
     if (Platform.isAndroid) {
-      appDataDir = await getExternalStorageDirectory();
+      appDataDir = (await getExternalStorageDirectory())!;
     } else {
       appDataDir = await getApplicationDocumentsDirectory();
     }
@@ -201,49 +201,56 @@ class _ToBlocksState extends State<ToBlocks> {
   @override
   Widget build(BuildContext context) {
     return Consumer<ArgsAsker>(
-        builder: (context, value, child) => SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.all(25.0),
-                child: Column(children: [
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Functior',
-                        style: TextStyle(fontSize: 36),
-                      ),
-                    ],
+      builder: (context, value, child) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(25.0),
+          child: Column(
+            children: [
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    'Functior',
+                    style: TextStyle(fontSize: 36),
                   ),
-                  const SizedBox(height: 25),
-                  Expanded(
-                    child: ListView.builder(
-                        itemCount: value.toBlocksArgs.length,
-                        itemBuilder: (context, index) {
-                          return ListTile(
-                              title: TextArgTile(
-                            arg: value.toBlocksArgs[index],
-                          ));
-                        }),
-                  ),
-                  const SizedBox(height: 25),
-                  GestureDetector(
-                    onTap: () => startGenerate(context, value.toBlocksArgs),
-                    child: Container(
-                      padding: const EdgeInsets.all(25),
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                          color: Colors.blueGrey, borderRadius: BorderRadius.circular(12)),
-                      child: const Center(
-                        child: Text(
-                          'Generate',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ),
-                  )
-                ]),
+                ],
               ),
-            ));
+              const SizedBox(height: 25),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: value.toBlocksArgs.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: TextArgTile(
+                        arg: value.toBlocksArgs[index],
+                      ),
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: 25),
+              GestureDetector(
+                onTap: () => startGenerate(context, value.toBlocksArgs),
+                child: Container(
+                  padding: const EdgeInsets.all(25),
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.blueGrey,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Center(
+                    child: Text(
+                      'Generate',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 
@@ -275,11 +282,14 @@ bool validationCheck(BuildContext context, double samplingRate, String generatio
 
 void alertInvalidArg(BuildContext context, String arg) {
   showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-            title: const Text('Argument error'),
-            content: Text("Invalid argument '$arg'" +
-                '\n' +
-                'Click the button next to the argument name to see more infomation about this argument'),
-          ));
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text('Argument error'),
+      content: Text(
+        "Invalid argument '$arg'"
+        '\n'
+        'Click the button next to the argument name to see more infomation about this argument',
+      ),
+    ),
+  );
 }
