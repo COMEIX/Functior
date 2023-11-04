@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:functior/components/bottom_nav_bar.dart';
 import '../const.dart';
-import './to_particles.dart';
-import './to_blocks.dart';
-import './about.dart';
+import 'to_particles.dart';
+import 'to_blocks.dart';
+import 'about.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

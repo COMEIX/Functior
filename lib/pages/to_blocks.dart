@@ -2,14 +2,15 @@ import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:functior/components/arg_tile.dart';
-import 'package:functior/models/args_asker.dart';
+import 'package:functior/models/arg_asker.dart';
 import 'package:image/image.dart' as img;
 import 'package:provider/provider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
-import '../models/arg.dart';
-import '../static/colors.dart';
+import '../models/Arg.dart';
+import '../static/Colors.dart';
+import 'package:window_manager/window_manager.dart';
 
 class ToBlocks extends StatefulWidget {
   const ToBlocks({super.key});
@@ -200,53 +201,64 @@ class _ToBlocksState extends State<ToBlocks> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ArgsAsker>(
-      builder: (context, value, child) => SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(25.0),
-          child: Column(
-            children: [
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    'Functior',
-                    style: TextStyle(fontSize: 36),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 25),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: value.toBlocksArgs.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      title: TextArgTile(
-                        arg: value.toBlocksArgs[index],
+    return GestureDetector(
+      onPanStart: (details) {
+        if (Platform.isWindows) windowManager.startDragging();
+      },
+      child: Consumer<ArgsAsker>(
+        builder: (context, value, child) => SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(25.0),
+            child: Column(
+              children: [
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Functior',
+                      style: TextStyle(
+                        fontFamily: "PingFang SC",
+                        fontSize: 36,
                       ),
-                    );
-                  },
+                    ),
+                  ],
                 ),
-              ),
-              const SizedBox(height: 25),
-              GestureDetector(
-                onTap: () => startGenerate(context, value.toBlocksArgs),
-                child: Container(
-                  padding: const EdgeInsets.all(25),
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Colors.blueGrey,
-                    borderRadius: BorderRadius.circular(12),
+                const SizedBox(height: 25),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: value.toBlocksArgs.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: TextArgTile(
+                          arg: value.toBlocksArgs[index],
+                        ),
+                      );
+                    },
                   ),
-                  child: const Center(
-                    child: Text(
-                      'Generate',
-                      style: TextStyle(color: Colors.white),
+                ),
+                const SizedBox(height: 25),
+                GestureDetector(
+                  onTap: () => startGenerate(context, value.toBlocksArgs),
+                  child: Container(
+                    padding: const EdgeInsets.all(25),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.blueGrey,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Center(
+                      child: Text(
+                        'Generate',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: "PingFang SC",
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              )
-            ],
+                )
+              ],
+            ),
           ),
         ),
       ),

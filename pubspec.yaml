@@ -43,6 +43,8 @@ dependencies:
   image: ^3.0.1
   path_provider:
   path:
+  window_manager:
+  bitsdojo_window:
 
 dev_dependencies:
   flutter_test:

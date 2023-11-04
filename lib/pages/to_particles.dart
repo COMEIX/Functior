@@ -2,13 +2,14 @@ import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:functior/components/arg_tile.dart';
-import 'package:functior/models/args_asker.dart';
+import 'package:functior/models/arg_asker.dart';
 import 'package:image/image.dart' as img;
 import 'package:provider/provider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
-import '../models/arg.dart';
+import '../models/Arg.dart';
+import 'package:window_manager/window_manager.dart';
 
 class ToParticles extends StatefulWidget {
   const ToParticles({super.key});
@@ -54,8 +55,16 @@ class _ToParticlesState extends State<ToParticles> {
                       children: [CircularProgressIndicator()]));
             } else if (snapshot.hasError) {
               return AlertDialog(
-                title: const Text('Error'),
-                content: Text('${snapshot.error}'),
+                title: const Text(
+                  'Error',
+                  style: TextStyle(fontFamily: "PingFang SC", fontWeight: FontWeight.bold),
+                ),
+                content: Text(
+                  '${snapshot.error}',
+                  style: const TextStyle(
+                    fontFamily: "PingFang SC",
+                  ),
+                ),
               );
             } else {
               return AlertDialog(
@@ -164,57 +173,68 @@ class _ToParticlesState extends State<ToParticles> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ArgsAsker>(
-      builder: (context, value, child) => SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(25.0),
-          child: Column(
-            children: [
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    'Functior',
-                    style: TextStyle(fontSize: 36),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 25),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: value.toParticlesArgs.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      title: TextArgTile(
-                        arg: value.toParticlesArgs[index],
+    return GestureDetector(
+      onPanStart: (details) {
+        if (Platform.isWindows) windowManager.startDragging();
+      },
+      child: Consumer<ArgsAsker>(
+        builder: (context, value, child) => SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(25.0),
+            child: Column(
+              children: [
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Functior',
+                      style: TextStyle(
+                        fontFamily: "PingFang SC",
+                        fontSize: 36,
                       ),
-                    );
-                  },
+                    ),
+                  ],
                 ),
-              ),
-              const SizedBox(height: 25),
-              Column(
-                children: [
-                  GestureDetector(
-                    onTap: () => startGenerate(context, value.toParticlesArgs),
-                    child: Container(
-                      padding: const EdgeInsets.all(25),
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Colors.blueGrey,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: const Center(
-                        child: Text(
-                          'Generate',
-                          style: TextStyle(color: Colors.white),
+                const SizedBox(height: 25),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: value.toParticlesArgs.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: TextArgTile(
+                          arg: value.toParticlesArgs[index],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(height: 5),
+                Column(
+                  children: [
+                    GestureDetector(
+                      onTap: () => startGenerate(context, value.toParticlesArgs),
+                      child: Container(
+                        padding: const EdgeInsets.all(25),
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Colors.blueGrey,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: const Center(
+                          child: Text(
+                            'Generate',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: "PingFang SC",
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

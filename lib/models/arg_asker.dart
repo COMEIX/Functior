@@ -1,7 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:flutter/material.dart';
-import './arg.dart';
+import 'Arg.dart';
 
 class ArgsAsker extends ChangeNotifier {
   final _particle_samplingRate = TextEditingController();
